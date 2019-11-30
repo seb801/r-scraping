@@ -1,0 +1,34 @@
+install.packages("RSelenium")
+install.packages("rvest")
+library(rvest)
+library(RSelenium)
+remDr <- remoteDriver(
+  remoteServerAddr = "localhost",
+  port = 4446L,
+  browserName = "chrome"
+)
+remDr$open()
+remDr$navigate("http://www.kyobobook.co.kr/login/login.laf?Kc=GNHHNOlogin&orderClick=c03&retURL=http%3A//www.kyobobook.co.kr/index.laf%3FOV_REFFER%3Dhttps%3A//www.google.com/")
+id<- remDr$findElement(using="id",value='memid')
+pw<- remDr$findElement(using='id',value='pw')
+btn<-remDr$findElement(using='class',value='btn_submit')
+
+id$setElementAttribute("value","a") # 이 형식에 실제 아이디 쓰면 로그인되지만 개인정보 보호를 위해 실제 아이디 생략
+pw$setElementAttribute("value","a") # 이 형식에 실제 비밀번호 쓰면 로그인되지만 개인정보 보호를 위해 실제 비밀번호 생략
+btn$clickElement()
+
+
+remDr$open()
+remDr$navigate('http://www.kyobobook.co.kr/bestSellerNew/bestseller.laf?orderClick=d79')
+
+frames = remDr$findElements(using = "xpath",
+                            value = '//*[@id="main_contents"]')     # 원하는 정보가 담겨있는 위치를 마우스 오른쪽 검사 해서 코드가 뜨면 그 코드를 또 마우스 오른쪽 copy-> copy xpath해서 형식에 맞게 쓴다
+
+print(frames)
+
+
+list=remDr$findElements(using = 'class', value ='detail')
+list_a=unlist(lapply(list,function(x){x$getElementText()}))
+list_a
+
+remDr$close() 
